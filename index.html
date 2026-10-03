@@ -321,24 +321,36 @@ const $ = id => document.getElementById(id);
 let items = [], cur = -1, playing = true, timer = null, startedAt = 0, raf = null, tick = null, secs = 0;
 
 /* ===== Tự dò file ảnh/video theo số thứ tự ===== */
+const ALL_EXT=[...IMG_EXT.map(e=>[e,"img"]),...VID_EXT.map(e=>[e,"vid"])];
+let lastExt=null, useHead=true;
 function probeImg(src){return new Promise(r=>{const i=new Image();i.onload=()=>r(true);i.onerror=()=>r(false);i.src=src})}
 function probeVid(src){return new Promise(r=>{const v=document.createElement("video");v.preload="metadata";
   v.onloadedmetadata=()=>r(true);v.onerror=()=>r(false);v.src=src;setTimeout(()=>r(false),4000)})}
+async function exists(src,type){
+  if(useHead){
+    try{ const r=await fetch(src,{method:"HEAD"}); return r.ok }
+    catch(e){ useHead=false } // file:// -> quay về cách dò cũ
+  }
+  return type==="img"?probeImg(src):probeVid(src);
+}
 async function probeNumber(n){
-  const base = FOLDER + PREFIX + n + ".";
-  const res = await Promise.all([
-    ...IMG_EXT.map(e=>probeImg(base+e).then(ok=>ok&&{type:"img",src:base+e})),
-    ...VID_EXT.map(e=>probeVid(base+e).then(ok=>ok&&{type:"vid",src:base+e}))
-  ]);
-  return res.find(Boolean)||null;
+  const base=FOLDER+PREFIX+n+".";
+  const hit=async([e,t])=>(await exists(base+e,t))?{type:t,src:base+e,ext:e}:null;
+  if(lastExt){ const r=await hit(lastExt); if(r) return r }       // đoán trước: phần lớn dùng cùng đuôi
+  const rest=ALL_EXT.filter(x=>!lastExt||x[0]!==lastExt[0]);
+  const res=(await Promise.all(rest.map(hit))).find(Boolean)||null;
+  if(res) lastExt=[res.ext,res.type];
+  return res;
 }
 async function scan(){
   const found=[]; let gap=0, n=1;
   while(n<=MAX_N && gap<MAX_GAP){
-    const batch=[]; for(let k=0;k<4;k++) batch.push(probeNumber(n+k));
-    const out=await Promise.all(batch);
-    for(const r of out){ if(r){found.push({...r,n:found.length+1});gap=0}else gap++; if(gap>=MAX_GAP)break }
-    n+=4;
+    // dò lần lượt từng số để luôn ưu tiên đuôi đã gặp
+    const r=await probeNumber(n);
+    if(r){found.push({...r,n:found.length+1});gap=0;
+      const l=document.querySelector("#loading div:last-child"); if(l) l.textContent="ĐANG QUAY PHIM… ("+found.length+")"}
+    else gap++;
+    n++;
   }
   return found;
 }
