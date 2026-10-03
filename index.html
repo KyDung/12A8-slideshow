@@ -238,6 +238,7 @@ body.isvid .screen{animation:none}
 #end .end-inner{transform:scale(.9);transition:transform 1.4s}
 #end.show .end-inner{transform:scale(1)}
 .end-note{font-family:var(--font-script);font-size:clamp(20px,3vw,30px);line-height:1.6;color:#f3e6c8;margin-top:18px;text-shadow:0 0 14px rgba(47,184,166,.6)}
+.start-btn:disabled{cursor:wait;animation:none;filter:grayscale(.5);opacity:.85}
 </style>
 </head>
 <body>
@@ -254,8 +255,8 @@ body.isvid .screen{animation:none}
     <div class="presents">★ Thước phim kỷ niệm ★</div>
     <div class="big-title">12A8</div>
     <div class="sub-title">Những ngày tháng rực rỡ nhất</div>
-    <button class="start-btn" id="startBtn">▶ Bắt đầu chiếu</button>
-    <div class="hint">(chạm / nhấn Enter để mở màn và bật nhạc)</div>
+    <button class="start-btn" id="startBtn" disabled>⏳ Đang chuẩn bị…</button>
+    <div class="hint" id="hint">(tải xong toàn bộ ảnh mới bắt đầu chiếu để xem mượt nhất)</div>
   </div>
 </div>
 
@@ -368,7 +369,7 @@ function build(){
     }
     slides.appendChild(s); it.el=s;
     const t=document.createElement("div"); t.className="thumb";
-    t.innerHTML=(it.type==="img"?`<img src="${it.src}" loading="lazy" alt="">`:`<video src="${it.src}#t=0.5" muted preload="none"></video>`)+`<span class="no">${pad(i+1)}${it.type==="vid"?" ▶":""}</span>`;
+    t.innerHTML=(it.type==="img"?`<img src="${it.src}" alt="">`:`<video src="${it.src}#t=0.5" muted preload="none"></video>`)+`<span class="no">${pad(i+1)}${it.type==="vid"?" ▶":""}</span>`;
     t.onclick=()=>{go(i,true)}; thumbs.appendChild(t); it.th=t;
   });
   for(const id of ["bt","bb"]){const w=$(id);for(let i=0;i<28;i++)w.appendChild(document.createElement("b"))}
@@ -462,8 +463,9 @@ bgm.addEventListener("ended",()=>{bgm.currentTime=0;bgm.play()}); // đảm bả
 
 /* ===== Khởi động ===== */
 let started=false;
+let ready=false;
 async function begin(){
-  if(started)return; started=true;
+  if(started||!ready)return; started=true;
   bgm.play().catch(()=>{}); mbtn.classList.add("show");
   $("splash").classList.add("open"); confetti(160);
   setTimeout(()=>{$("splash").classList.add("hide");$("app").classList.add("on")},1500);
@@ -490,6 +492,27 @@ inner.addEventListener("touchend",e=>{ if(sx===null)return; const dx=e.changedTo
 // tạm dừng slide khi tab ẩn
 document.addEventListener("visibilitychange",()=>{ if(document.hidden&&playing){setPlaying(false);window._wasP=true} else if(window._wasP){window._wasP=false;setPlaying(true)} });
 
+/* ===== Tải sẵn toàn bộ ảnh (và đầu video) trước khi chiếu ===== */
+async function preloadAll(){
+  let done=0; const total=items.length, btn=$("startBtn");
+  const upd=()=>{btn.textContent=`⏳ Đang tải ${done}/${total}`};
+  upd();
+  const one=it=>new Promise(res=>{
+    const fin=()=>{done++;upd();res()};
+    if(it.type==="img"){
+      const im=new Image(); im.src=it.src;
+      (im.decode?im.decode():new Promise((a,b)=>{im.onload=a;im.onerror=b})).then(fin,fin);
+    }else{
+      const v=it.el.querySelector("video"); let ok=false;
+      const f=()=>{if(!ok){ok=true;fin()}};
+      v.preload="auto"; v.addEventListener("loadeddata",f,{once:true}); v.addEventListener("error",f,{once:true});
+      setTimeout(f,15000); v.load();
+    }
+  });
+  // tải theo nhóm nhỏ để điện thoại yếu không bị nghẽn
+  const q=[...items]; const worker=async()=>{while(q.length) await one(q.shift())};
+  await Promise.all([worker(),worker(),worker()]);
+}
 makeBokeh(); startClock();
 (async()=>{
   items = await scan();
@@ -498,8 +521,10 @@ makeBokeh(); startClock();
     return;
   }
   build(); $("loading").style.display="none";
-  
-  if(started && cur<0) go(0);
+  await preloadAll();
+  ready=true;
+  const b=$("startBtn"); b.disabled=false; b.textContent="▶ Bắt đầu chiếu";
+  $("hint").textContent="(chạm / nhấn Enter để mở màn và bật nhạc)";
 })();
 </script>
 </body>
