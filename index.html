@@ -667,7 +667,7 @@ async function preloadAll(){
   const upd=()=>{btn.textContent=`⏳ Đang tải ${done}/${total}`};
   upd();
   const one=it=>new Promise(res=>{
-    const fin=()=>{done++;upd();res()};
+    let fd=false; const fin=()=>{ if(fd)return; fd=true; done++;upd();res() }; setTimeout(fin,8000);
     if(it.type==="img"){
       const im=new Image(); im.src=it.src;
       (im.decode?im.decode():new Promise((a,b)=>{im.onload=a;im.onerror=b})).then(fin,fin);
@@ -764,7 +764,7 @@ function startMode(m,idx=0,fresh=false){
   document.querySelectorAll("[data-mode]").forEach(b=>b.classList.toggle("sel",b.dataset.mode===m));
   $("themeMenu").classList.remove("open"); $("themeBtn").classList.remove("on");
   $("end").classList.remove("show");
-  if(m==="cinema"){ cur=-1; playing=true; go(Math.min(idx,items.length-1)); return }
+  if(m==="cinema"){ items.forEach(i=>{i.el.classList.remove("active");i.th.classList.remove("on");i.el.querySelectorAll("video").forEach(v=>v.pause())}); cur=-1; playing=true; go(Math.min(idx,items.length-1)); return }
   buildViews(); playing=true;
   const run=()=>{
     layoutScroll();
