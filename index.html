@@ -496,11 +496,24 @@ async function probeNumber(n){
   if(res) lastExt=[res.ext,res.type];
   return res;
 }
+async function loadManifest(){
+  // danhsach.json (do CapNhatDanhSach.bat tạo) cho phép tên file có đuôi id: img_30_c9890.mp4
+  const m=new Map();
+  try{
+    const r=await fetch(FOLDER+"danhsach.json",{cache:"no-cache"}); if(!r.ok) return m;
+    for(const name of await r.json()){
+      const mt=/^img_(\d+)(?:_[^.]+)?\.([A-Za-z0-9]+)$/.exec(name); if(!mt) continue;
+      const ext=mt[2].toLowerCase(), type=VID_EXT.some(e=>e.toLowerCase()===ext)?"vid":"img";
+      m.set(+mt[1],{type,src:FOLDER+name});
+    }
+  }catch(e){}
+  return m;
+}
 async function scan(){
+  const known=await loadManifest();
   const found=[]; let gap=0, n=1;
   while(n<=MAX_N && gap<MAX_GAP){
-    // dò lần lượt từng số để luôn ưu tiên đuôi đã gặp
-    const r=await probeNumber(n);
+    const r=known.get(n)||await probeNumber(n);
     if(r){found.push({...r,n:found.length+1});gap=0;
       const l=document.querySelector("#loading div:last-child"); if(l) l.textContent="ĐANG QUAY PHIM… ("+found.length+")"}
     else gap++;
