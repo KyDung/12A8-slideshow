@@ -307,6 +307,39 @@ body:not([data-mode=cinema]) #app{display:none}
 #zClose{position:absolute;top:14px;right:14px;z-index:2;width:48px;height:48px;border:0;border-radius:50%;font-size:22px;color:#fff;cursor:pointer;background:rgba(255,255,255,.18)}
 @media (max-width:700px){.toolbar{gap:6px;right:8px}.tbtn,.music-btn{width:40px;height:40px;font-size:17px}.vtitle{top:10px;left:12px}}
 body:not([data-mode=cinema]) .vignette{opacity:.3}body:not([data-mode=cinema]) .grain{opacity:.06}
+
+/* ===== Trang trí giao diện CUỘN DỌC ===== */
+#viewCredits{background:
+  radial-gradient(ellipse 60% 40% at 50% -5%,rgba(255,215,0,.35),transparent 70%),
+  radial-gradient(ellipse 50% 50% at 0% 60%,rgba(47,184,166,.28),transparent 70%),
+  radial-gradient(ellipse 50% 50% at 100% 40%,rgba(255,120,150,.2),transparent 70%),
+  linear-gradient(160deg,#0b1d26,#10303a 50%,#0a1822)}
+.cside{position:absolute;top:0;bottom:0;width:clamp(30px,5vw,64px);z-index:4;pointer-events:none;background:#08090d;box-shadow:0 0 30px rgba(0,0,0,.7)}
+.cside.l{left:0;border-right:2px solid rgba(255,215,0,.5)}.cside.r{right:0;border-left:2px solid rgba(255,215,0,.5)}
+.cside::before{content:"";position:absolute;inset:0 22% -46px 22%;
+  background:repeating-linear-gradient(180deg,#f6e7c1 0 24px,transparent 24px 46px);border-radius:3px;animation:roll46 1.8s linear infinite;opacity:.9}
+@keyframes roll46{to{transform:translateY(46px)}}
+.cside i{position:absolute;left:50%;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:#ffd700;box-shadow:0 0 10px 3px rgba(255,215,0,.8);animation:bulb 1.3s infinite}
+#credSpark{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+#credSpark b{position:absolute;bottom:-20px;color:#ffe680;opacity:0;text-shadow:0 0 10px rgba(255,215,0,.9);animation:sparkUp linear infinite}
+@keyframes sparkUp{0%{transform:translateY(0) rotate(0) scale(.6);opacity:0}15%{opacity:.9}100%{transform:translateY(-110vh) rotate(200deg) scale(1.1);opacity:0}}
+.cs{position:relative;z-index:2;flex-direction:column;gap:0}
+.cs::before{content:"";position:absolute;width:min(92vw,760px);aspect-ratio:1;border-radius:50%;z-index:-1;filter:blur(40px);opacity:.55;background:radial-gradient(circle,var(--glow,#ffd700),transparent 68%)}
+.cs:nth-child(3n+1){--glow:rgba(255,215,0,.55)}.cs:nth-child(3n+2){--glow:rgba(47,184,166,.6)}.cs:nth-child(3n){--glow:rgba(255,110,150,.5)}
+.cframe{position:relative;max-width:min(860px,88vw);max-height:92%;display:flex;flex-direction:column;align-items:center;padding:clamp(8px,1.4vh,14px) clamp(8px,1.4vh,14px) 0;
+  background:linear-gradient(145deg,#fffaf0,#f4e6c4);border-radius:8px;box-shadow:0 22px 50px rgba(0,0,0,.6),0 0 0 3px rgba(255,215,0,.65),0 0 46px rgba(255,215,0,.3)}
+.cs:nth-child(even) .cframe{transform:rotate(1.3deg)}.cs:nth-child(odd) .cframe{transform:rotate(-1.3deg)}
+.cframe::before,.cframe::after{content:"";position:absolute;top:-14px;width:84px;height:26px;background:rgba(255,226,140,.8);box-shadow:0 2px 6px rgba(0,0,0,.3);z-index:2}
+.cframe::before{left:-18px;transform:rotate(-38deg)}.cframe::after{right:-18px;transform:rotate(38deg)}
+.cframe .media{max-width:100%;max-height:68vh;max-height:68dvh;border:0;border-radius:4px;background:#000;box-shadow:inset 0 0 0 2px rgba(0,0,0,.25);cursor:zoom-in}
+.ccap{display:flex;align-items:center;justify-content:center;gap:12px;padding:clamp(6px,1.2vh,12px) 8px;font:700 clamp(18px,2.8vw,28px) var(--font-script);color:#8a4b12;white-space:nowrap}
+.ccap em{font:700 12px var(--font-type);font-style:normal;letter-spacing:.2em;color:#fff;background:linear-gradient(90deg,#ff8a00,#ff5d73);padding:3px 10px;border-radius:99px}
+.cs.txt p::before,.cs.txt p::after{content:"✦ ✦ ✦";display:block;font-size:.3em;letter-spacing:.6em;color:#fff;opacity:.85;margin:.6em 0}
+#credProg{position:absolute;right:calc(clamp(30px,5vw,64px) + 12px);top:90px;bottom:90px;width:6px;z-index:5;border-radius:9px;background:rgba(255,255,255,.14);pointer-events:none}
+#credProg i{position:absolute;left:0;right:0;top:0;height:0;border-radius:9px;background:linear-gradient(180deg,#ffe680,#ff8a00,#ff5d73);box-shadow:0 0 12px rgba(255,215,0,.8)}
+#credCnt{position:absolute;left:calc(clamp(30px,5vw,64px) + 14px);bottom:14px;z-index:5;font:700 14px var(--font-type);letter-spacing:.2em;color:#ffe680;pointer-events:none;text-shadow:0 0 10px rgba(255,215,0,.6)}
+@media (max-width:700px){#credProg{display:none}.cframe::before,.cframe::after{width:56px}}
+#viewCredits .vtitle{left:calc(clamp(30px,5vw,64px) + 14px)}
 </style>
 </head>
 <body>
@@ -390,7 +423,7 @@ body:not([data-mode=cinema]) .vignette{opacity:.3}body:not([data-mode=cinema]) .
   <button class="topt" data-mode="credits"><span class="ic">📜</span><span><b>Credits cuộn dọc</b><small>Ảnh trôi từ dưới lên như cuối phim</small></span></button>
   <button class="topt" data-mode="reel"><span class="ic">🎞️</span><span><b>Thước phim ngang</b><small>Cuộn phim trôi ngang qua màn hình</small></span></button>
 </div>
-<div class="view" id="viewCredits"><div class="vtitle">12A8<small>Slide show những kỷ niệm</small></div><div id="credTrack"></div><div class="vhint">KÉO / CUỘN ĐỂ XEM · BẤM VÀO ẢNH ĐỂ PHÓNG TO</div></div>
+<div class="view" id="viewCredits"><div class="vtitle">12A8<small>Slide show những kỷ niệm</small></div><div class="cside l" id="cl"></div><div class="cside r" id="cr"></div><div id="credSpark"></div><div id="credTrack"></div><div id="credProg"><i id="credProgI"></i></div><div id="credCnt"></div><div class="vhint">KÉO / CUỘN ĐỂ XEM · BẤM VÀO ẢNH ĐỂ PHÓNG TO</div></div>
 <div class="view" id="viewReel"><div class="vtitle">12A8<small>Thước phim kỷ niệm</small></div><div class="rband" id="rband"></div><div id="reelTrack"></div><div class="vhint">KÉO / CUỘN ĐỂ XEM · BẤM VÀO ẢNH ĐỂ PHÓNG TO</div></div>
 <div id="zoom">
   <button id="zClose" title="Đóng (Esc)">✕</button>
@@ -627,12 +660,18 @@ function buildViews(){
   const ct=$("credTrack"), rt=$("reelTrack");
   const intro=document.createElement("div"); intro.className="cs txt"; intro.innerHTML="<p>12A8<small>Slide show những kỷ niệm</small></p>"; ct.appendChild(intro);
   items.forEach((it,i)=>{
-    const c=document.createElement("div"); c.className="cs"; const m=mkMedia(it); c.appendChild(m); ct.appendChild(c);
+    const c=document.createElement("div"); c.className="cs"; const m=mkMedia(it);
+    const fr=document.createElement("div"); fr.className="cframe"; fr.appendChild(m);
+    const cap=document.createElement("div"); cap.className="ccap"; cap.innerHTML="<em>CẢNH "+pad(i+1)+"</em>Kỷ niệm 12A8 ✨"; fr.appendChild(cap);
+    c.appendChild(fr); ct.appendChild(c);
     m.onclick=()=>{ if(!justDragged) openZoom(it) }; credEls.push({it,m,c});
     const f=document.createElement("div"); f.className="rf"; const m2=mkMedia(it); f.appendChild(m2);
     const no=document.createElement("span"); no.className="no"; no.textContent="12A8 · "+pad(i+1); f.appendChild(no); rt.appendChild(f);
     m2.onclick=()=>{ if(!justDragged) openZoom(it) }; reelEls.push({it,m:m2,f});
   });
+  for(const id of ["cl","cr"]){const w=$(id); for(let k=0;k<14;k++){const d=document.createElement("i"); d.style.top=(k*7.5+2)+"%"; d.style.animationDelay=(k%2?.6:0)+"s"; w.appendChild(d)}}
+  const sp=$("credSpark"), ch=["✦","★","✧","✨"];
+  for(let k=0;k<22;k++){const b=document.createElement("b"); b.textContent=ch[k%4]; b.style.cssText=`left:${6+Math.random()*88}%;font-size:${10+Math.random()*16}px;animation-duration:${9+Math.random()*10}s;animation-delay:${-Math.random()*14}s`; sp.appendChild(b)}
   const outro=document.createElement("div"); outro.className="cs txt"; outro.innerHTML="<p>Cảm ơn vì đã cùng nhau tạo nên kỷ niệm 12A8!<small>Thanh xuân của chúng ta ✨</small></p>"; ct.appendChild(outro);
 }
 function stopScroll(){ cancelAnimationFrame(sRaf); sRaf=0; clearTimeout(endTimer); endTimer=0; sTarget=null }
@@ -655,6 +694,7 @@ let vidTick=0;
 function renderScroll(){
   if(mode==="credits"){
     $("credTrack").style.transform=`translate3d(0,${-sPos}px,0)`; curIdx=nearCred();
+    $("credProgI").style.height=(sMax?sPos/sMax*100:0)+"%"; $("credCnt").textContent=pad(curIdx+1)+" / "+pad(items.length);
     if(++vidTick%10===0){ const H=window.innerHeight; credEls.forEach(({it,m},i)=>{ if(it.type!=="vid")return; const y=(i+1)*H-sPos; (Math.abs(y)<H*.7)?m.play().catch(()=>{}):m.pause() }) }
   }else{
     $("reelTrack").style.transform=`translate3d(${-sPos}px,-50%,0)`; $("viewReel").style.setProperty("--bgx",(-sPos%46)+"px");
