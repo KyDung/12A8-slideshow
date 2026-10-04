@@ -239,6 +239,74 @@ body.isvid .screen{animation:none}
 #end.show .end-inner{transform:scale(1)}
 .end-note{font-family:var(--font-script);font-size:clamp(20px,3vw,30px);line-height:1.6;color:#f3e6c8;margin-top:18px;text-shadow:0 0 14px rgba(47,184,166,.6)}
 .start-btn:disabled{cursor:wait;animation:none;filter:grayscale(.5);opacity:.85}
+
+/* ===== Thanh công cụ + chọn giao diện + phóng to ===== */
+.toolbar{position:fixed;top:12px;right:14px;z-index:70;display:flex;gap:8px;opacity:0;visibility:hidden;transition:.4s}
+.toolbar.show{opacity:1;visibility:visible}
+.tbtn,.music-btn{position:static;width:46px;height:46px;border-radius:50%;border:0;cursor:pointer;font-size:19px;color:#fff;
+  background:linear-gradient(135deg,var(--pink),var(--violet));box-shadow:0 0 18px rgba(47,184,166,.6);opacity:1;visibility:visible;transition:transform .2s}
+.tbtn:hover,.music-btn:hover{transform:scale(1.12)}
+.tbtn.on{outline:3px solid var(--gold)}
+#themeMenu{position:fixed;top:68px;right:14px;z-index:71;width:min(300px,calc(100vw - 28px));padding:10px;border-radius:16px;
+  background:rgba(6,20,26,.94);backdrop-filter:blur(10px);box-shadow:0 0 0 1px rgba(240,201,135,.5),0 16px 40px rgba(0,0,0,.6);
+  display:none;flex-direction:column;gap:6px}
+#themeMenu.open{display:flex}
+#themeMenu h4{font:700 12px var(--font-type);letter-spacing:.2em;color:var(--gold);padding:4px 8px}
+.topt{display:flex;gap:12px;align-items:center;text-align:left;padding:10px 12px;border:2px solid transparent;border-radius:12px;cursor:pointer;
+  color:#fff;background:rgba(255,255,255,.06);font:inherit;transition:.2s}
+.topt:hover{background:rgba(255,255,255,.14)}
+.topt.sel{border-color:var(--gold);background:rgba(240,201,135,.16)}
+.topt .ic{font-size:26px}
+.topt b{display:block;font-size:15px}
+.topt small{display:block;font-size:12px;opacity:.75;margin-top:2px}
+.theme-pick{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.theme-pick button{padding:10px 16px;border-radius:14px;border:2px solid rgba(240,201,135,.45);background:rgba(0,0,0,.35);color:#fff;
+  font:600 14px var(--font-ui);cursor:pointer;transition:.2s}
+.theme-pick button:hover{transform:translateY(-3px)}
+.theme-pick button.sel{border-color:var(--gold);background:rgba(240,201,135,.25);box-shadow:0 0 18px rgba(240,201,135,.5)}
+
+/* ===== 2 giao diện cuộn: credits dọc & thước phim ngang ===== */
+.view{position:fixed;inset:0;z-index:20;display:none;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+body[data-mode=credits] #viewCredits,body[data-mode=reel] #viewReel{display:block;animation:fadeV .8s ease}
+@keyframes fadeV{from{opacity:0}to{opacity:1}}
+body:not([data-mode=cinema]) #app{display:none}
+.vtitle{position:absolute;top:14px;left:18px;z-index:5;font-family:var(--font-title);font-weight:900;font-size:clamp(18px,2.6vw,28px);color:var(--gold);text-shadow:0 2px 10px rgba(0,0,0,.6);pointer-events:none}
+.vtitle small{display:block;font:400 clamp(14px,2vw,20px) var(--font-script);color:#fff}
+.vhint{position:absolute;bottom:12px;left:0;right:0;text-align:center;z-index:5;font:400 12px var(--font-type);letter-spacing:.12em;color:#cfe;opacity:.75;pointer-events:none}
+#viewCredits{background:linear-gradient(135deg,#0f1419 0%,#14323a 50%,#0b2230 100%)}
+#credTrack{position:absolute;left:0;right:0;top:0;will-change:transform}
+.cs{height:100vh;height:100dvh;display:flex;align-items:center;justify-content:center;padding:4vh 16px}
+.cs .media{max-width:min(820px,92vw);max-height:86%;width:auto;height:auto;object-fit:contain;border-radius:16px;border:3px solid transparent;cursor:zoom-in;
+  background:linear-gradient(#000,#000) padding-box,linear-gradient(135deg,#fff7bf,#ffd700 35%,#ffbf00 65%,#ffe680) border-box;
+  box-shadow:0 10px 30px rgba(0,0,0,.45),0 0 28px rgba(255,215,0,.3)}
+.cs.txt p{font-family:var(--font-title);font-weight:900;text-align:center;font-size:clamp(30px,5.4vw,64px);line-height:1.2;color:#ffe680;
+  text-shadow:0 0 18px rgba(255,215,0,.5),2px 2px 8px rgba(0,0,0,.6);padding:0 20px}
+.cs.txt p small{display:block;margin-top:14px;font:400 clamp(20px,3vw,34px) var(--font-script);color:#fff}
+#viewReel{background:radial-gradient(circle at 50% 50%,#1d4650,#07151a 75%);--fh:min(58vh,66vw,460px)}
+.rband{position:absolute;left:0;right:0;top:50%;height:calc(var(--fh) + 100px);transform:translateY(-50%);
+  background:linear-gradient(#0a0a0f,#17171f 50%,#0a0a0f);box-shadow:0 0 0 2px #2c2c38,0 24px 70px rgba(0,0,0,.65)}
+.rband::before,.rband::after{content:"";position:absolute;left:0;right:0;height:16px;
+  background:repeating-linear-gradient(90deg,#f6e7c1 0 24px,transparent 24px 46px);background-size:46px 100%;background-position:var(--bgx,0) 0;border-radius:3px}
+.rband::before{top:20px}.rband::after{bottom:20px}
+#reelTrack{position:absolute;left:0;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:30px;padding:0 50vw;will-change:transform}
+.rf{position:relative;flex:none;height:var(--fh);transition:transform .5s,opacity .5s,filter .5s;transform:scale(.88);opacity:.7;filter:saturate(.7) brightness(.8)}
+.rf .media{display:block;height:100%;width:auto;max-width:86vw;object-fit:cover;border:3px solid #000;border-radius:4px;background:#000;cursor:zoom-in}
+.rf .no{position:absolute;left:6px;bottom:-34px;font:700 12px var(--font-type);color:var(--gold);letter-spacing:.2em;white-space:nowrap}
+.rf.near{transform:scale(1.07);opacity:1;filter:none;z-index:2}
+.rf.near .media{box-shadow:0 0 0 3px var(--gold),0 0 40px rgba(240,201,135,.55)}
+#zoom{position:fixed;inset:0;z-index:90;display:none;background:rgba(2,8,10,.96);touch-action:none;overflow:hidden}
+#zoom.open{display:block}
+#zstage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;cursor:zoom-in}
+#zstage.z{cursor:grab}
+#zstage .zm{max-width:96vw;max-height:84vh;object-fit:contain;transform-origin:center;will-change:transform;user-select:none;-webkit-user-drag:none;border-radius:6px}
+.zbar{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+  background:rgba(6,20,26,.85);box-shadow:0 0 0 1px rgba(240,201,135,.5);z-index:2}
+.zbar button{width:44px;height:44px;border:0;border-radius:50%;cursor:pointer;color:#fff;font-size:20px;background:rgba(255,255,255,.12)}
+.zbar button:hover{background:var(--pink)}
+#zPct{min-width:54px;text-align:center;font:600 14px var(--font-type);color:var(--gold)}
+#zClose{position:absolute;top:14px;right:14px;z-index:2;width:48px;height:48px;border:0;border-radius:50%;font-size:22px;color:#fff;cursor:pointer;background:rgba(255,255,255,.18)}
+@media (max-width:700px){.toolbar{gap:6px;right:8px}.tbtn,.music-btn{width:40px;height:40px;font-size:17px}.vtitle{top:10px;left:12px}}
+body:not([data-mode=cinema]) .vignette{opacity:.3}body:not([data-mode=cinema]) .grain{opacity:.06}
 </style>
 </head>
 <body>
@@ -255,6 +323,11 @@ body.isvid .screen{animation:none}
     <div class="presents">★ Thước phim kỷ niệm ★</div>
     <div class="big-title">12A8</div>
     <div class="sub-title">Những ngày tháng rực rỡ nhất</div>
+    <div class="theme-pick" id="themePick">
+      <button data-mode="cinema">🎬 Điện ảnh</button>
+      <button data-mode="credits">📜 Credits cuộn dọc</button>
+      <button data-mode="reel">🎞️ Thước phim ngang</button>
+    </div>
     <button class="start-btn" id="startBtn" disabled>⏳ Đang chuẩn bị…</button>
     <div class="hint" id="hint">(tải xong toàn bộ ảnh mới bắt đầu chiếu để xem mượt nhất)</div>
   </div>
@@ -305,7 +378,25 @@ body.isvid .screen{animation:none}
     <button class="start-btn" id="replayBtn">↻ Xem lại từ đầu</button>
   </div>
 </div>
-<button class="music-btn" id="musicBtn" title="Bật / tắt nhạc">🎵</button>
+<div class="toolbar" id="toolbar">
+  <button class="tbtn" id="themeBtn" title="Đổi giao diện">🎨</button>
+  <button class="tbtn" id="zoomBtn" title="Phóng to ảnh">🔍</button>
+  <button class="tbtn" id="fullBtn" title="Toàn màn hình">⛶</button>
+  <button class="music-btn" id="musicBtn" title="Bật / tắt nhạc">🎵</button>
+</div>
+<div id="themeMenu">
+  <h4>CHỌN GIAO DIỆN</h4>
+  <button class="topt" data-mode="cinema"><span class="ic">🎬</span><span><b>Điện ảnh</b><small>Từng ảnh một, chuyển cảnh, dải phim thu nhỏ</small></span></button>
+  <button class="topt" data-mode="credits"><span class="ic">📜</span><span><b>Credits cuộn dọc</b><small>Ảnh trôi từ dưới lên như cuối phim</small></span></button>
+  <button class="topt" data-mode="reel"><span class="ic">🎞️</span><span><b>Thước phim ngang</b><small>Cuộn phim trôi ngang qua màn hình</small></span></button>
+</div>
+<div class="view" id="viewCredits"><div class="vtitle">12A8<small>Slide show những kỷ niệm</small></div><div id="credTrack"></div><div class="vhint">KÉO / CUỘN ĐỂ XEM · BẤM VÀO ẢNH ĐỂ PHÓNG TO</div></div>
+<div class="view" id="viewReel"><div class="vtitle">12A8<small>Thước phim kỷ niệm</small></div><div class="rband" id="rband"></div><div id="reelTrack"></div><div class="vhint">KÉO / CUỘN ĐỂ XEM · BẤM VÀO ẢNH ĐỂ PHÓNG TO</div></div>
+<div id="zoom">
+  <button id="zClose" title="Đóng (Esc)">✕</button>
+  <div id="zstage"></div>
+  <div class="zbar"><button id="zOut">−</button><span id="zPct">100%</span><button id="zIn">+</button><button id="zReset" title="Đặt lại">⟲</button></div>
+</div>
 <audio id="bgm" src="music/music_bg.mp3" loop preload="auto"></audio>
 
 <script>
@@ -409,18 +500,20 @@ function go(i,user){
 }
 function showEnd(){
   clearTimeout(timer); cancelAnimationFrame(raf);
+  stopScroll();
   const old=items[cur]; if(old&&old.type==="vid") old.el.querySelector("video").pause();
   $("bar").style.width="100%"; $("end").classList.add("show"); confetti(140);
 }
 function replay(){
   $("end").classList.remove("show"); bgm.currentTime=0; bgm.play().catch(()=>{});
-  secs=0; $("tagTime").textContent="00:00"; playing=true; go(0);
+  secs=0; $("tagTime").textContent="00:00"; playing=true; startMode(mode,0,true);
 }
 function barLoop(fn){
   const step=()=>{ $("bar").style.width=Math.min(100,fn()*100)+"%"; raf=requestAnimationFrame(step) }; step();
 }
 function setPlaying(p){
   playing=p;
+  if(mode!=="cinema") return;
   const it=items[cur]; if(!it)return;
   if(it.type==="vid"){const v=it.el.querySelector(".fg"); p?v.play():v.pause()}
   {
@@ -466,17 +559,20 @@ let started=false;
 let ready=false;
 async function begin(){
   if(started||!ready)return; started=true;
-  bgm.play().catch(()=>{}); mbtn.classList.add("show");
+  bgm.play().catch(()=>{}); mbtn.classList.add("show"); $("toolbar").classList.add("show");
   $("splash").classList.add("open"); confetti(160);
   setTimeout(()=>{$("splash").classList.add("hide");$("app").classList.add("on")},1500);
-  setTimeout(()=>{ if(items.length) go(0) },1700);
+  setTimeout(()=>{ if(items.length) startMode(mode,0,true) },1700);
 }
 $("splash").addEventListener("click",begin);
 $("replayBtn").onclick=replay;
 document.addEventListener("keydown",e=>{
   if(!started){ if(e.key==="Enter"||e.key===" "){e.preventDefault();begin()} return }
-  if(e.key==="ArrowRight")go(cur+1,true);
-  else if(e.key==="ArrowLeft")go(cur-1,true);
+  if(e.key==="Escape"){ if(zoomOpen) closeZoom(); else $("themeMenu").classList.remove("open"); return }
+  if(zoomOpen){ if(e.key==="+"||e.key==="=")zoomBy(1.3); else if(e.key==="-")zoomBy(1/1.3); return }
+  if(e.key==="ArrowRight")stepNext(1);
+  else if(e.key==="ArrowLeft")stepNext(-1);
+  else if(e.key==="z"||e.key==="Z")openZoomCurrent();
   else if(e.key===" "){e.preventDefault();setPlaying(!playing)}
   else if(e.key==="f"||e.key==="F")toggleFull();
   else if(e.key==="m"||e.key==="M")mbtn.click();
@@ -513,6 +609,158 @@ async function preloadAll(){
   const q=[...items]; const worker=async()=>{while(q.length) await one(q.shift())};
   await Promise.all([worker(),worker(),worker()]);
 }
+
+/* ===================================================================
+   GIAO DIỆN: Điện ảnh | Credits cuộn dọc | Thước phim ngang
+   =================================================================== */
+const MODES=["cinema","credits","reel"];
+let mode="cinema"; try{const m=localStorage.getItem("themeMode"); if(MODES.includes(m)) mode=m}catch(e){}
+let curIdx=0, viewsBuilt=false, sPos=0, sMin=0, sMax=0, sSpeed=60, sLast=0, sRaf=0, sTarget=null, endTimer=0, dragging=false, justDragged=false;
+let credEls=[], reelEls=[], zoomOpen=false, zoomWasPlaying=false;
+
+function mkMedia(it){
+  if(it.type==="img"){const im=document.createElement("img"); im.className="media"; im.src=it.src; im.alt="Kỷ niệm"; im.draggable=false; return im}
+  const v=document.createElement("video"); v.className="media"; v.src=it.src; v.muted=true; v.loop=true; v.playsInline=true; v.preload="metadata"; return v;
+}
+function buildViews(){
+  if(viewsBuilt) return; viewsBuilt=true;
+  const ct=$("credTrack"), rt=$("reelTrack");
+  const intro=document.createElement("div"); intro.className="cs txt"; intro.innerHTML="<p>12A8<small>Slide show những kỷ niệm</small></p>"; ct.appendChild(intro);
+  items.forEach((it,i)=>{
+    const c=document.createElement("div"); c.className="cs"; const m=mkMedia(it); c.appendChild(m); ct.appendChild(c);
+    m.onclick=()=>{ if(!justDragged) openZoom(it) }; credEls.push({it,m,c});
+    const f=document.createElement("div"); f.className="rf"; const m2=mkMedia(it); f.appendChild(m2);
+    const no=document.createElement("span"); no.className="no"; no.textContent="12A8 · "+pad(i+1); f.appendChild(no); rt.appendChild(f);
+    m2.onclick=()=>{ if(!justDragged) openZoom(it) }; reelEls.push({it,m:m2,f});
+  });
+  const outro=document.createElement("div"); outro.className="cs txt"; outro.innerHTML="<p>Cảm ơn vì đã cùng nhau tạo nên kỷ niệm 12A8!<small>Thanh xuân của chúng ta ✨</small></p>"; ct.appendChild(outro);
+}
+function stopScroll(){ cancelAnimationFrame(sRaf); sRaf=0; clearTimeout(endTimer); endTimer=0; sTarget=null }
+function stopCinema(){ clearTimeout(timer); cancelAnimationFrame(raf); const o=items[cur]; if(o&&o.type==="vid") o.el.querySelectorAll("video").forEach(v=>v.pause()) }
+
+function layoutScroll(){
+  if(mode==="credits"){
+    const H=window.innerHeight; sMin=0; sMax=$("credTrack").scrollHeight-H; sSpeed=H/(SLIDE_MS/1000);
+  }else if(mode==="reel"){
+    const W=window.innerWidth, a=reelEls[0].f, b=reelEls[reelEls.length-1].f;
+    const c0=a.offsetLeft+a.offsetWidth/2, c1=b.offsetLeft+b.offsetWidth/2;
+    sMin=c0-W/2; sMax=c1-W/2; sSpeed=Math.max(40,(c1-c0)/Math.max(1,reelEls.length-1)/(SLIDE_MS/1000));
+  }
+}
+function centerOfReel(i){const f=reelEls[i].f; return f.offsetLeft+f.offsetWidth/2-window.innerWidth/2}
+function nearReel(){ const mid=sPos+window.innerWidth/2; let bi=0,bd=1e9; reelEls.forEach((r,i)=>{const d=Math.abs(r.f.offsetLeft+r.f.offsetWidth/2-mid); if(d<bd){bd=d;bi=i}}); return bi }
+function nearCred(){ const H=window.innerHeight; return Math.max(0,Math.min(items.length-1,Math.round(sPos/H)-1)) }
+
+let vidTick=0;
+function renderScroll(){
+  if(mode==="credits"){
+    $("credTrack").style.transform=`translate3d(0,${-sPos}px,0)`; curIdx=nearCred();
+    if(++vidTick%10===0){ const H=window.innerHeight; credEls.forEach(({it,m},i)=>{ if(it.type!=="vid")return; const y=(i+1)*H-sPos; (Math.abs(y)<H*.7)?m.play().catch(()=>{}):m.pause() }) }
+  }else{
+    $("reelTrack").style.transform=`translate3d(${-sPos}px,-50%,0)`; $("viewReel").style.setProperty("--bgx",(-sPos%46)+"px");
+    const n=nearReel(); curIdx=n;
+    reelEls.forEach((r,i)=>{ r.f.classList.toggle("near",i===n); if(r.it.type==="vid"){ i===n?r.m.play().catch(()=>{}):r.m.pause() } });
+  }
+}
+function scrollLoop(t){
+  const dt=Math.min(.05,(t-sLast)/1000||0); sLast=t;
+  if(sTarget!==null){ sPos+=(sTarget-sPos)*Math.min(1,dt*7); if(Math.abs(sTarget-sPos)<1.5){sPos=sTarget;sTarget=null} }
+  else if(playing&&!zoomOpen&&!dragging) sPos+=sSpeed*dt;
+  sPos=Math.max(sMin,Math.min(sMax,sPos));
+  renderScroll();
+  if(sPos>=sMax-0.5 && sTarget===null){
+    if(!endTimer) endTimer=setTimeout(showEnd,2600);
+  }else if(endTimer){ clearTimeout(endTimer); endTimer=0 }
+  sRaf=requestAnimationFrame(scrollLoop);
+}
+function startMode(m,idx=0,fresh=false){
+  stopScroll(); stopCinema();
+  mode=m; try{localStorage.setItem("themeMode",m)}catch(e){}
+  document.body.dataset.mode=m; document.body.classList.remove("isvid");
+  document.querySelectorAll("[data-mode]").forEach(b=>b.classList.toggle("sel",b.dataset.mode===m));
+  $("themeMenu").classList.remove("open"); $("themeBtn").classList.remove("on");
+  $("end").classList.remove("show");
+  if(m==="cinema"){ cur=-1; playing=true; go(Math.min(idx,items.length-1)); return }
+  buildViews(); playing=true;
+  const run=()=>{
+    layoutScroll();
+    sPos = m==="credits" ? (fresh?0:(idx+1)*window.innerHeight) : centerOfReel(Math.min(idx,items.length-1));
+    sPos=Math.max(sMin,Math.min(sMax,sPos));
+    sLast=performance.now(); sRaf=requestAnimationFrame(scrollLoop);
+  };
+  requestAnimationFrame(()=>requestAnimationFrame(run));
+}
+function stepNext(d){
+  if(mode==="cinema"){ go(cur+d,true); return }
+  if(sTarget===null){ sTarget=sPos }
+  if(mode==="credits"){ const H=window.innerHeight; sTarget=Math.max(sMin,Math.min(sMax,(Math.round(sTarget/H)+d)*H)) }
+  else{ const n=Math.max(0,Math.min(reelEls.length-1,nearReel()+d)); sTarget=centerOfReel(n) }
+}
+
+["viewCredits","viewReel"].forEach(id=>{
+  const v=$(id); let sx=0,sy=0,sp=0,down=false,moved=false;
+  v.addEventListener("pointerdown",e=>{ if(zoomOpen)return; down=true; moved=false; sx=e.clientX; sy=e.clientY; sp=sPos; sTarget=null });
+  v.addEventListener("pointermove",e=>{ if(!down)return;
+    const d=(mode==="credits"?sy-e.clientY:sx-e.clientX);
+    if(!moved && Math.abs(d)>8){ moved=true; dragging=true; justDragged=true }
+    if(moved) sPos=Math.max(sMin,Math.min(sMax,sp+d)) });
+  const up=()=>{ if(!down)return; down=false; dragging=false; setTimeout(()=>justDragged=false,60) };
+  v.addEventListener("pointerup",up); v.addEventListener("pointercancel",up); v.addEventListener("pointerleave",up);
+  v.addEventListener("wheel",e=>{ e.preventDefault(); sTarget=null; sPos=Math.max(sMin,Math.min(sMax,sPos+(e.deltaY||e.deltaX))) },{passive:false});
+});
+window.addEventListener("resize",()=>{ if(mode!=="cinema"&&viewsBuilt&&sRaf){ const keep=curIdx; layoutScroll(); sPos=mode==="credits"?(keep+1)*window.innerHeight:centerOfReel(keep); sPos=Math.max(sMin,Math.min(sMax,sPos)) } });
+
+$("themeBtn").onclick=e=>{ e.stopPropagation(); const o=$("themeMenu").classList.toggle("open"); $("themeBtn").classList.toggle("on",o) };
+document.addEventListener("click",e=>{ if(!e.target.closest("#themeMenu,#themeBtn")){ $("themeMenu").classList.remove("open"); $("themeBtn").classList.remove("on") } });
+document.querySelectorAll(".topt").forEach(b=>b.onclick=()=>{ if(!started)return; if(b.dataset.mode===mode){$("themeMenu").classList.remove("open");return}
+  const idx=mode==="cinema"?Math.max(0,cur):curIdx; startMode(b.dataset.mode,idx) });
+document.querySelectorAll("#themePick button").forEach(b=>b.onclick=e=>{ e.stopPropagation();
+  mode=b.dataset.mode; try{localStorage.setItem("themeMode",mode)}catch(_){}
+  document.querySelectorAll("[data-mode]").forEach(x=>x.classList.toggle("sel",x.dataset.mode===mode)) });
+document.querySelectorAll("[data-mode]").forEach(x=>x.classList.toggle("sel",x.dataset.mode===mode));
+document.body.dataset.mode=mode;
+$("fullBtn").onclick=toggleFull; if(!document.documentElement.requestFullscreen) $("fullBtn").style.display="none";
+document.addEventListener("fullscreenchange",()=>$("fullBtn").classList.toggle("on",!!document.fullscreenElement));
+
+/* ===== Phóng to ảnh ===== */
+let zs=1, zx=0, zy=0, zel=null; const zst=$("zstage"), zptr=new Map(); let zdist=0, zmoved=false;
+function zApply(){ if(zel) zel.style.transform=`translate(${zx}px,${zy}px) scale(${zs})`; $("zPct").textContent=Math.round(zs*100)+"%"; zst.classList.toggle("z",zs>1) }
+function zoomBy(f,cx,cy){
+  const ns=Math.max(1,Math.min(8,zs*f)); if(ns===zs)return;
+  if(cx!==undefined){ const r=zst.getBoundingClientRect(), ox=cx-(r.left+r.width/2), oy=cy-(r.top+r.height/2); zx=ox-(ox-zx)*(ns/zs); zy=oy-(oy-zy)*(ns/zs) }
+  zs=ns; if(zs===1){zx=0;zy=0} zApply();
+}
+function openZoom(it){
+  if(zoomOpen||!it) return; zoomOpen=true; zoomWasPlaying=playing; if(playing) setPlaying(false);
+  zst.innerHTML=""; zs=1; zx=0; zy=0;
+  if(it.type==="img"){ zel=document.createElement("img"); zel.src=it.src }
+  else{ zel=document.createElement("video"); zel.src=it.src; zel.controls=true; zel.autoplay=true; zel.loop=true; zel.muted=true; zel.playsInline=true }
+  zel.className="zm"; zel.draggable=false; zst.appendChild(zel); zApply(); $("zoom").classList.add("open");
+}
+function closeZoom(){
+  if(!zoomOpen)return; zoomOpen=false; $("zoom").classList.remove("open"); zst.innerHTML=""; zel=null;
+  if(zoomWasPlaying) setPlaying(true);
+}
+function openZoomCurrent(){
+  if(mode==="cinema") openZoom(items[Math.max(0,cur)]);
+  else openZoom(items[curIdx]);
+}
+$("zoomBtn").onclick=openZoomCurrent;
+$("zClose").onclick=closeZoom; $("zIn").onclick=()=>zoomBy(1.4); $("zOut").onclick=()=>zoomBy(1/1.4); $("zReset").onclick=()=>{zs=1;zx=0;zy=0;zApply()};
+$("slides").addEventListener("click",()=>{ if(mode==="cinema"&&started) openZoom(items[cur]) });
+$("slides").style.cursor="zoom-in";
+zst.addEventListener("wheel",e=>{ e.preventDefault(); zoomBy(e.deltaY<0?1.2:1/1.2,e.clientX,e.clientY) },{passive:false});
+zst.addEventListener("dblclick",e=>{ if(zs>1){zs=1;zx=0;zy=0;zApply()} else zoomBy(2.5,e.clientX,e.clientY) });
+zst.addEventListener("pointerdown",e=>{ zptr.set(e.pointerId,{x:e.clientX,y:e.clientY}); zmoved=false; zst.setPointerCapture?.(e.pointerId);
+  if(zptr.size===2){ const [a,b]=[...zptr.values()]; zdist=Math.hypot(a.x-b.x,a.y-b.y) } });
+zst.addEventListener("pointermove",e=>{ const p=zptr.get(e.pointerId); if(!p)return;
+  if(zptr.size===2){ p.x=e.clientX;p.y=e.clientY; const [a,b]=[...zptr.values()]; const d=Math.hypot(a.x-b.x,a.y-b.y); if(zdist) zoomBy(d/zdist,(a.x+b.x)/2,(a.y+b.y)/2); zdist=d; zmoved=true; return }
+  const dx=e.clientX-p.x, dy=e.clientY-p.y; p.x=e.clientX; p.y=e.clientY;
+  if(zs>1){ zx+=dx; zy+=dy; zmoved=true; zApply() } });
+const zup=e=>{ const had=zptr.delete(e.pointerId); zdist=0; return had };
+zst.addEventListener("pointerup",e=>{ if(zup(e)&&!zmoved&&zs===1&&e.target===zst) closeZoom() });
+zst.addEventListener("pointercancel",zup);
+
 makeBokeh(); startClock();
 (async()=>{
   items = await scan();
