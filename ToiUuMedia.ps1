@@ -37,7 +37,15 @@ if (-not (Test-Path $log)) { '' | Set-Content $log -Encoding UTF8 }
 $done = @{}
 Get-Content $log -Encoding UTF8 | Where-Object { $_ } | ForEach-Object { $p = $_ -split '\|'; $done["$($p[0])|$($p[1])"] = $p[2] }
 
-$imgExt = '.jpg','.jpeg','.png','.webp','.heic','.jfif','.bmp','.gif'
+# --- file moi tai thang vao thu muc anh (ten khong dang img_<so>...) -> chuyen qua Nguon de xu ly ---
+Get-ChildItem $out.FullName -File | Where-Object { $_.Name -ne 'danhsach.json' -and $_.Name -notmatch '^img_\d+' } | ForEach-Object {
+  $dest = Join-Path $src $_.Name
+  if (Test-Path $dest) { $dest = Join-Path $src ("{0}_{1}{2}" -f $_.BaseName, (Get-Date -Format 'HHmmss'), $_.Extension) }
+  Move-Item -LiteralPath $_.FullName -Destination $dest
+  Write-Host ("Chuyen tu thu muc anh sang Nguon: " + $_.Name)
+}
+
+$imgExt ='.jpg','.jpeg','.png','.webp','.heic','.jfif','.bmp','.gif'
 $vidExt = '.mp4','.mov','.m4v','.webm','.avi','.mkv'
 
 # --- so thu tu tiep theo ---
